@@ -14,7 +14,7 @@ It demonstrates:
 ## Run locally
 
 ```sh
-npm install
+npm ci
 npx playwright install chromium
 npm run dev
 ```
