@@ -70,4 +70,5 @@ await writeFile(join(dist, 'manifest.json'), JSON.stringify({
 }, null, 2));
 
 await writeFile(join(dist, 'package.json'), JSON.stringify({ type: 'module', dependencies: { 'what-framework': '0.13.10' } }, null, 2));
+await write(join(dist, 'functions', 'package.json'), JSON.stringify({ type: 'module' }, null, 2));
 console.log('Tempo Vura build ready: dist/static, dist/functions/api_entry + api_report, dist/manifest.json');
