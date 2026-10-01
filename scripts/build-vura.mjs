@@ -54,13 +54,13 @@ await build({
 
 await writeFile(join(dist, 'manifest.json'), JSON.stringify({
   version: 1,
+  notFoundPage: '404.html',
   pages: [
-    { filePath: 'src/app.jsx', urlPattern: '/', mode: 'client', hasLoader: false, hasGetServerData: false, config: { mode: 'client', title: 'Tempo — What Framework starter' } },
-    { filePath: 'src/app.jsx', urlPattern: '/timer', mode: 'client', hasLoader: false, hasGetServerData: false, config: { mode: 'client' } },
-    { filePath: 'src/app.jsx', urlPattern: '/projects', mode: 'client', hasLoader: false, hasGetServerData: false, config: { mode: 'client' } },
-    { filePath: 'src/app.jsx', urlPattern: '/report', mode: 'client', hasLoader: false, hasGetServerData: false, config: { mode: 'client' } },
-    { filePath: 'src/static-pages.mjs', urlPattern: '/build', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', title: 'How Tempo is built' } },
-    { filePath: 'src/static-pages.mjs', urlPattern: '/404', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', title: 'Tempo route not found' } }
+    { filePath: 'index.html', urlPattern: '/', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', staticKey: 'index.html', title: 'Tempo — What Framework starter' } },
+    { filePath: 'timer/index.html', urlPattern: '/timer', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', staticKey: 'timer/index.html' } },
+    { filePath: 'projects/index.html', urlPattern: '/projects', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', staticKey: 'projects/index.html' } },
+    { filePath: 'report/index.html', urlPattern: '/report', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', staticKey: 'report/index.html' } },
+    { filePath: 'build/index.html', urlPattern: '/build', mode: 'static', hasLoader: false, hasGetServerData: false, config: { mode: 'static', staticKey: 'build/index.html', title: 'How Tempo is built' } }
   ],
   api: [
     { filePath: 'src/api/entry.js', urlPattern: '/api/entry', methods: ['POST'], kind: 'serverless', hasWebsocket: false, config: { kind: 'serverless', compute: { class: 'function', memory: '1gb' } } },

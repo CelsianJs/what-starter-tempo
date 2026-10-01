@@ -133,6 +133,10 @@ Regression coverage proves multibyte emoji can trip the byte cap even when strin
 
 The functions are bundled with shared domain code so emitted files do not import missing source files.
 
+The timer UI is still client-rendered after the shell loads, but the Vura manifest marks only the known shell URLs as `mode: "static"` with explicit `config.staticKey` values. Do not switch these page entries to `mode: "client"` unless you want a global SPA fallback: Vura's edge router serves extensionless unknown paths from `index.html` for client-mode deployments. Tempo instead publishes `/`, `/timer`, `/projects`, `/report` and `/build` explicitly, sets `notFoundPage: "404.html"`, and lets unknown paths return the generated 404 document.
+
+The local preview server mirrors this static-delivery contract for smoke tests, but it is only a contract check. The provider retry is the proof for hosted HTTP status on unknown routes.
+
 ## Production backend extension
 
 To turn this into a production SaaS backend:
