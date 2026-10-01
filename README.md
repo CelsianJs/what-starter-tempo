@@ -15,6 +15,7 @@ It demonstrates:
 
 ```sh
 npm install
+npx playwright install chromium
 npm run dev
 ```
 
@@ -27,6 +28,7 @@ npm run smoke
 ```
 
 `npm run smoke` starts `dist/` locally, runs a real browser through timer/report/build/404 flows, and fails on relevant console warnings or errors.
+On minimal Linux CI images that do not already include browser system libraries, use `npx playwright install --with-deps chromium` instead.
 
 ## Reset demo data
 
