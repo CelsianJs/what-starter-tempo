@@ -29,6 +29,11 @@ export function BuildPage() {
       h('p', null, 'Project budget cards also expose healthy, watch and over states from pure domain math. The cards show a status chip and an 80% threshold tick so the budget warning behavior is visible in the starter instead of buried in copy.')
     ),
     h('section', null,
+      h('h2', null, 'Design iteration: list identity while typing'),
+      h('p', null, 'A browser audit found the editable entry rows were remounting the active input during continuous keyboard replacement. That dropped focus to the document body and only accepted the first typed character.'),
+      h('p', null, 'The row list now uses keyed <For fallback> rendering, and EntryRow reads signal-wrapped entry accessors such as entry().note and entry().minutes. The regression test marks the active note and minutes DOM nodes, uses select-all/backspace/type, and proves the same node stays focused while the full value persists after reload.')
+    ),
+    h('section', null,
       h('h2', null, 'Boundaries'),
       h('p', null, 'No auth, database or shared tenant data is claimed. Every visitor receives an isolated localStorage workspace that can be reset. Add auth and durable tenant storage before calling it a production SaaS backend.'),
       h('p', null, 'Planned public source: https://github.com/CelsianJs/what-starter-tempo')

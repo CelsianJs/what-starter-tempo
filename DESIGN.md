@@ -41,7 +41,7 @@
 
 ## Components
 - Existing components to reuse: none; standalone public starter.
-- New/changed components: shell, nav link, timer controls, metric strip, editable entry row, project budget card, report panel.
+- New/changed components: shell, nav link, timer controls, metric strip, keyed editable entry row, project budget card, report panel.
 - Variants and states: idle/running timer, real today-empty state, report idle/loading/ready/error, healthy/watch/over-budget budgets.
 - Token/component ownership: CSS variables in `src/styles.css`.
 
@@ -82,5 +82,5 @@
 
 ## Visual QA audit
 - External reference: none supplied; design was evaluated against this document rather than a pixel target.
-- Current judgment: warm editorial SaaS direction is intentional, header/nav now uses tighter vertical spacing, mobile controls remain native/keyboard-accessible, current-day seed rows populate the editable list, project budget cards show healthy/watch/over states with an 80% tick, and reduced-motion is respected.
+- Current judgment: warm editorial SaaS direction is intentional, header/nav now uses tighter vertical spacing, mobile controls remain native/keyboard-accessible, current-day seed rows populate the editable list, keyed row rendering preserves focus while note/minutes edits recalculate totals, project budget cards show healthy/watch/over states with an 80% tick, and reduced-motion is respected.
 - Follow-up after deployment: capture desktop/mobile screenshots from the live Vura URL and compare against the product goals above before linking from the marketing gallery.

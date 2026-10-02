@@ -65,6 +65,20 @@ export function budgetStatus(minutes, budgetMinutes) {
 
 The starter fixtures intentionally show all three states. The UI renders a status chip plus an 80% tick on each budget bar, which makes the "slow down" promise visible without adding a backend or fake billing.
 
+## Iteration note: editable row identity
+
+A later browser audit found that raw mapped entry rows remounted the focused input on each keystroke. The visible symptom was harsh: selecting all text in the first note field and typing `Focus stable tempo` left only `F`, focus fell back to `<body>`, and the minutes field only accepted `3` of `37`.
+
+The fix is to mount the row list once with keyed `<For fallback>` and pass signal-wrapped item accessors into `EntryRow`:
+
+```jsx
+<For each={() => todaysEntries()} key={(entry) => entry.id} fallback={<EmptyEntries />}>
+  {(entry) => <EntryRow entry={entry} />}
+</For>
+```
+
+Inside `EntryRow`, read `entry().note`, `entry().projectId`, and `entry().minutes`, and call `updateEntry(entry().id, patch)`. Do not imperatively refocus after rendering. The browser regression marks the active note and minutes DOM nodes, uses select-all/backspace/type, and proves the same node remains focused while localStorage persists the full replacement value.
+
 ## Effects and browser storage
 
 The demo persists only to the current browser:

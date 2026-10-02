@@ -1,4 +1,4 @@
-import { mount } from 'what-framework';
+import { For, mount } from 'what-framework';
 import './styles.css';
 import {
   addManualEntry,
@@ -93,31 +93,35 @@ function TimerPage() {
           <h2>Editable entries</h2>
         </div>
         <div class="entries">
-          {() => todaysEntries().length
-            ? todaysEntries().map((entry) => <EntryRow entry={entry} />)
-            : (
-              <div class="empty-state">
-                <strong>No blocks tracked today.</strong>
-                <span>Start the timer or add a 45-minute block to repopulate the editable list.</span>
-                <button class="button" onClick={resetDemo}>Restore demo entries</button>
-              </div>
-            )}
+          <For each={() => todaysEntries()} key={(entry) => entry.id} fallback={<EmptyEntries />}>
+            {(entry) => <EntryRow entry={entry} />}
+          </For>
         </div>
       </section>
     </Shell>
   );
 }
 
+function EmptyEntries() {
+  return (
+    <div class="empty-state">
+      <strong>No blocks tracked today.</strong>
+      <span>Start the timer or add a 45-minute block to repopulate the editable list.</span>
+      <button class="button" onClick={resetDemo}>Restore demo entries</button>
+    </div>
+  );
+}
+
 function EntryRow({ entry }) {
-  const project = () => workspace().projects.find((item) => item.id === entry.projectId);
+  const project = () => workspace().projects.find((item) => item.id === entry().projectId);
   return (
     <article class="entry-row">
       <span class="dot" style={() => `--dot:${project()?.accent || '#e85d1c'}`}></span>
-      <input aria-label="Entry note" value={entry.note} onInput={(event) => updateEntry(entry.id, { note: event.target.value })} />
-      <select aria-label="Entry project" value={entry.projectId} onChange={(event) => updateEntry(entry.id, { projectId: event.target.value })}>
+      <input aria-label="Entry note" value={entry().note} onInput={(event) => updateEntry(entry().id, { note: event.target.value })} />
+      <select aria-label="Entry project" value={entry().projectId} onChange={(event) => updateEntry(entry().id, { projectId: event.target.value })}>
         {workspace().projects.map((item) => <option value={item.id}>{item.name}</option>)}
       </select>
-      <input aria-label="Entry minutes" type="number" min="0" max="1440" value={entry.minutes} onInput={(event) => updateEntry(entry.id, { minutes: Number(event.target.value) || 0 })} />
+      <input aria-label="Entry minutes" type="number" min="0" max="1440" value={entry().minutes} onInput={(event) => updateEntry(entry().id, { minutes: Number(event.target.value) || 0 })} />
     </article>
   );
 }
