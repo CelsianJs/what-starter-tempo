@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-01
+- Last refreshed: 2026-10-02
 - Primary product surfaces: timer dashboard with serverless entry validation, compact product nav, project budget view, serverless report view, static `/build` explainer.
 - Evidence reviewed: What Framework starter conventions, Vura build-output shape, and the public starter requirements.
 
@@ -42,7 +42,7 @@
 ## Components
 - Existing components to reuse: none; standalone public starter.
 - New/changed components: shell, nav link, timer controls, metric strip, editable entry row, project budget card, report panel.
-- Variants and states: idle/running timer, report idle/loading/ready/error, over-budget/watch/healthy budgets.
+- Variants and states: idle/running timer, real today-empty state, report idle/loading/ready/error, healthy/watch/over-budget budgets.
 - Token/component ownership: CSS variables in `src/styles.css`.
 
 ## Accessibility
@@ -54,12 +54,12 @@
 
 ## Responsive behavior
 - Supported breakpoints/devices: desktop and narrow mobile.
-- Layout adaptations: timer controls, metrics, entries and project cards collapse to one column.
+- Layout adaptations: timer controls and entries collapse to one column; mobile metrics use a compact 2+1 grid; project cards remain readable with status chips.
 - Touch/hover differences: large touch targets, hover is decorative only.
 
 ## Interaction states
 - Loading: report panel says `Generating…`.
-- Empty: reset data repopulates seed entries; today can naturally become empty if edited away.
+- Empty: today's editable list shows a resettable empty state if entries are edited away.
 - Error: report panel prints server validation/network errors.
 - Success: report JSON shows typed totals and project status.
 - Disabled: not needed.
@@ -82,5 +82,5 @@
 
 ## Visual QA audit
 - External reference: none supplied; design was evaluated against this document rather than a pixel target.
-- Current judgment: warm editorial SaaS direction is intentional, header/nav now uses tighter vertical spacing, mobile collapses to one column, controls remain native/keyboard-accessible, and reduced-motion is respected.
+- Current judgment: warm editorial SaaS direction is intentional, header/nav now uses tighter vertical spacing, mobile controls remain native/keyboard-accessible, current-day seed rows populate the editable list, project budget cards show healthy/watch/over states with an 80% tick, and reduced-motion is respected.
 - Follow-up after deployment: capture desktop/mobile screenshots from the live Vura URL and compare against the product goals above before linking from the marketing gallery.

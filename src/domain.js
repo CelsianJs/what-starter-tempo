@@ -1,23 +1,28 @@
 export const STORAGE_KEY = 'what-starter-tempo.workspace.v1';
 
-export const seedWorkspace = {
-  workspaceId: 'demo-' + Math.random().toString(36).slice(2, 8),
-  running: null,
-  projects: [
-    { id: 'atlas', name: 'Atlas onboarding', client: 'Northstar Labs', budgetHours: 42, accent: '#e85d1c' },
-    { id: 'orchard', name: 'Orchard content sprint', client: 'Lumen Foods', budgetHours: 26, accent: '#bc7a24' },
-    { id: 'forge', name: 'Forge UI polish', client: 'Copperline Studio', budgetHours: 18, accent: '#604434' }
-  ],
-  entries: [
-    { id: 'e1', projectId: 'atlas', note: 'Mapped activation states', minutes: 95, day: '2026-09-28' },
-    { id: 'e2', projectId: 'orchard', note: 'Drafted launch article', minutes: 130, day: '2026-09-29' },
-    { id: 'e3', projectId: 'forge', note: 'Reduced settings friction', minutes: 80, day: '2026-09-30' },
-    { id: 'e4', projectId: 'atlas', note: 'Budget review with product', minutes: 55, day: '2026-10-01' }
-  ]
-};
+export function seedWorkspace(now = Date.now()) {
+  const day = (offset) => isoToday(new Date(now + offset * 86400000));
+  return {
+    workspaceId: 'demo-' + Math.random().toString(36).slice(2, 8),
+    running: null,
+    projects: [
+      { id: 'atlas', name: 'Atlas onboarding', client: 'Northstar Labs', budgetHours: 8, accent: '#e85d1c' },
+      { id: 'orchard', name: 'Orchard content sprint', client: 'Lumen Foods', budgetHours: 4, accent: '#bc7a24' },
+      { id: 'forge', name: 'Forge UI polish', client: 'Copperline Studio', budgetHours: 3, accent: '#604434' }
+    ],
+    entries: [
+      { id: 'e1', projectId: 'atlas', note: 'Mapped activation states', minutes: 95, day: day(-3) },
+      { id: 'e2', projectId: 'orchard', note: 'Drafted launch article', minutes: 130, day: day(-2) },
+      { id: 'e3', projectId: 'forge', note: 'Reduced settings friction', minutes: 80, day: day(-1) },
+      { id: 'e4', projectId: 'atlas', note: 'Budget review with product', minutes: 120, day: day(0) },
+      { id: 'e5', projectId: 'orchard', note: 'Publication QA pass', minutes: 75, day: day(0) },
+      { id: 'e6', projectId: 'forge', note: 'Component spacing repairs', minutes: 155, day: day(0) }
+    ]
+  };
+}
 
-export function cloneSeed() {
-  return JSON.parse(JSON.stringify(seedWorkspace));
+export function cloneSeed(now = Date.now()) {
+  return JSON.parse(JSON.stringify(seedWorkspace(now)));
 }
 
 export function formatMinutes(minutes) {
@@ -27,8 +32,8 @@ export function formatMinutes(minutes) {
   return h ? `${h}h ${String(m).padStart(2, '0')}m` : `${m}m`;
 }
 
-export function isoToday() {
-  return new Date().toISOString().slice(0, 10);
+export function isoToday(date = new Date()) {
+  return date.toISOString().slice(0, 10);
 }
 
 export function weekStart(date = new Date()) {
@@ -41,6 +46,14 @@ export function weekStart(date = new Date()) {
 export function entryMinutesWithRunning(entry, running, now = Date.now()) {
   if (!running || running.entryId !== entry.id) return entry.minutes;
   return entry.minutes + Math.max(0, Math.floor((now - running.startedAt) / 60000));
+}
+
+export function budgetStatus(minutes, budgetMinutes) {
+  if (!budgetMinutes) return 'healthy';
+  const used = minutes / budgetMinutes;
+  if (used >= 1) return 'over';
+  if (used >= 0.8) return 'watch';
+  return 'healthy';
 }
 
 export function summarizeWorkspace(workspace, now = Date.now()) {
@@ -60,7 +73,8 @@ export function summarizeWorkspace(workspace, now = Date.now()) {
       minutes,
       weekMinutes,
       budgetMinutes,
-      budgetUsed: budgetMinutes ? Math.min(1.2, minutes / budgetMinutes) : 0
+      budgetUsed: budgetMinutes ? Math.min(1.2, minutes / budgetMinutes) : 0,
+      status: budgetStatus(minutes, budgetMinutes)
     };
   });
   const totalMinutes = byProject.reduce((sum, project) => sum + project.minutes, 0);

@@ -48,6 +48,23 @@ export const runningEntry = computed(() => {
 
 The UI reads `summary()` and `runningEntry()` through function children, so timer state, totals and budget bars update without manual DOM coordination.
 
+## Iteration note: seed dates and budget health
+
+The first public capture showed an empty "Editable entries" list because fixture dates were hard-coded. `cloneSeed(now)` now derives fixture days from the active clock, so every visitor gets real current-day rows while tests can still pass an explicit timestamp.
+
+Budget status is also computed in pure domain code:
+
+```js
+export function budgetStatus(minutes, budgetMinutes) {
+  const used = minutes / budgetMinutes;
+  if (used >= 1) return 'over';
+  if (used >= 0.8) return 'watch';
+  return 'healthy';
+}
+```
+
+The starter fixtures intentionally show all three states. The UI renders a status chip plus an 80% tick on each budget bar, which makes the "slow down" promise visible without adding a backend or fake billing.
+
 ## Effects and browser storage
 
 The demo persists only to the current browser:

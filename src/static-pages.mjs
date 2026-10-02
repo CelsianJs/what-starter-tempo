@@ -24,6 +24,11 @@ export function BuildPage() {
       h('p', null, 'The first API draft checked request.text().length. That buffered the full body and counted UTF-16 code units, not UTF-8 bytes. The current bounded reader counts Uint8Array.byteLength, cancels oversized streams, returns 413 for body limits and 400 for malformed JSON. Tests cover multibyte caps, stream cancellation and normal validation.')
     ),
     h('section', null,
+      h('h2', null, 'Design iteration: dated fixtures and budget states'),
+      h('p', null, 'A visual review caught that fixed seed dates could make the main editable list empty after the calendar moved on. The seed now derives entry days from an explicit clock, so tests are deterministic and visitors still see current-day rows.'),
+      h('p', null, 'Project budget cards also expose healthy, watch and over states from pure domain math. The cards show a status chip and an 80% threshold tick so the budget warning behavior is visible in the starter instead of buried in copy.')
+    ),
+    h('section', null,
       h('h2', null, 'Boundaries'),
       h('p', null, 'No auth, database or shared tenant data is claimed. Every visitor receives an isolated localStorage workspace that can be reset. Add auth and durable tenant storage before calling it a production SaaS backend.'),
       h('p', null, 'Planned public source: https://github.com/CelsianJs/what-starter-tempo')

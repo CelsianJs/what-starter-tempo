@@ -93,7 +93,15 @@ function TimerPage() {
           <h2>Editable entries</h2>
         </div>
         <div class="entries">
-          {() => todaysEntries().map((entry) => <EntryRow entry={entry} />)}
+          {() => todaysEntries().length
+            ? todaysEntries().map((entry) => <EntryRow entry={entry} />)
+            : (
+              <div class="empty-state">
+                <strong>No blocks tracked today.</strong>
+                <span>Start the timer or add a 45-minute block to repopulate the editable list.</span>
+                <button class="button" onClick={resetDemo}>Restore demo entries</button>
+              </div>
+            )}
         </div>
       </section>
     </Shell>
@@ -125,20 +133,33 @@ function MetricStrip() {
 }
 
 function ProjectsPage() {
+  const statusCopy = {
+    healthy: ['Healthy', 'Pacing under budget'],
+    watch: ['Watch', 'Above 80% of budget'],
+    over: ['Over', 'Budget exceeded']
+  };
   return (
     <Shell>
-      <div class="section-heading">
+      <div class="section-heading compact-heading">
         <p class="eyebrow">Budgets</p>
         <h1>Project budgets that tell you when to slow down.</h1>
       </div>
       <div class="project-grid">
         {() => summary().byProject.map((project) => (
-          <article class="project-card">
+          <article class="project-card" data-status={project.status}>
             <span class="project-accent" style={`background:${project.accent}`}></span>
-            <h2>{project.name}</h2>
-            <p>{project.client}</p>
+            <div class="project-title">
+              <div>
+                <h2>{project.name}</h2>
+                <p>{project.client}</p>
+              </div>
+              <span class="status-chip">{statusCopy[project.status][0]}</span>
+            </div>
             <strong>{formatMinutes(project.minutes)} / {project.budgetHours}h</strong>
-            <div class="bar"><span style={`width:${Math.min(100, project.budgetUsed * 100)}%; background:${project.accent}`}></span></div>
+            <div class="bar budget-bar" aria-label={`${statusCopy[project.status][1]} for ${project.name}`}>
+              <span style={`width:${Math.min(100, project.budgetUsed * 100)}%; background:${project.accent}`}></span>
+            </div>
+            <p class="budget-note">{statusCopy[project.status][1]} · 80% tick shown</p>
           </article>
         ))}
       </div>
