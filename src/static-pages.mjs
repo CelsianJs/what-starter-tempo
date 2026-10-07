@@ -4,6 +4,16 @@ export function BuildPage() {
   return h('main', { class: 'build' },
     h('p', { class: 'eyebrow' }, 'Agent reference'),
     h('h1', null, 'How Tempo is built'),
+    h('section', null,
+      h('h2', null, 'Pending entry, running block and persistence boundary'),
+      h('p', null, 'A delayed validation could accept two timer starts and leave an orphan block. startTimer now guards pending/running state before validation, while controls expose checking state. The running block reads existing clock signals, keyed project options preserve selection, and denied persistence is labeled session-only. Browser tests delay validation and require one request and one new row.'),
+      h('pre', null, "if (entryValidation().status === 'loading' || runningEntry()) return;")
+    ),
+    h('section', null,
+      h('h2', null, 'Reset owns the new workspace'),
+      h('p', null, 'Disabling a pending button is not enough: a response can arrive after Reset. A workspace generation and per-operation request counters decide whether each success or failure still owns its result. Reset invalidates both entry and report ownership, and a newer report cannot be overwritten by an older one. Controlled browser fetches exercise late success, validation failure, network failure, and out-of-order reports.'),
+      h('pre', null, 'const ownsResponse = () => generation === workspaceGeneration && request === reportRequest;')
+    ),
     h('p', null, 'Tempo is a public What Framework starter for a hybrid time-tracking demo. The product UI is a client app, this page is generated at build time, and /api/entry plus /api/report are Vura Function-compatible serverless endpoints.'),
     h('section', null,
       h('h2', null, 'State, computed values and effects'),

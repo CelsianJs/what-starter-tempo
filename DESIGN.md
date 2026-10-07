@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-02
+- Last refreshed: 2026-10-07
 - Primary product surfaces: timer dashboard with serverless entry validation, compact product nav, project budget view, serverless report view, static `/build` explainer.
 - Evidence reviewed: What Framework starter conventions, Vura build-output shape, and the public starter requirements.
 
@@ -62,7 +62,7 @@
 - Empty: today's editable list shows a resettable empty state if entries are edited away.
 - Error: report panel prints server validation/network errors.
 - Success: report JSON shows typed totals and project status.
-- Disabled: not needed.
+- Disabled: pending entry validation disables creation actions; Stop timer remains available when a timer is running.
 - Offline/slow network: local app remains usable; server report shows fetch error.
 
 ## Content voice
@@ -77,7 +77,16 @@
 - Compatibility constraints: browser localStorage; Vura Function-compatible endpoint.
 - Test/screenshot expectations: unit tests, API tests, build, Playwright smoke where browser is available.
 
+## Operational refinement
+
+Reset invalidates all pending entry/report response ownership. The reset seed, idle validation and idle report state must remain authoritative after late successes or failures; the latest report request is authoritative when responses resolve out of order.
+
+Timer creation rejects another start while validation is pending or a timer is already running. Manual creation also respects the pending boundary. Buttons expose checking state, the running panel names the note/project and elapsed minutes, and failed persistence is explicitly session-only. Keyed project options preserve the chosen project when entry changes refresh the workspace.
+
+Validation contract: The browser regression delays entry validation, attempts a duplicate start, requires one request/one row, preserves the chosen project, and checks denied storage. Existing continuous note/minutes focus checks remain in the same suite.
+
 ## Open questions
+
 - [ ] Root confirms final public repo URL after publishing.
 
 ## Visual QA audit

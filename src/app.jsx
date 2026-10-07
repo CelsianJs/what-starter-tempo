@@ -6,6 +6,8 @@ import {
   entryNote,
   entryValidation,
   navigate,
+  now,
+  persistenceStatus,
   requestServerReport,
   resetDemo,
   routePath,
@@ -53,7 +55,7 @@ function TimerPage() {
   return (
     <Shell>
       <section class="hero">
-        <p class="eyebrow">Demo workspace · saved only in this browser</p>
+        <p class="eyebrow" role="status">Demo workspace · {() => persistenceStatus()}</p>
         <h1>Make room for your best work.</h1>
         <p class="hero-copy">Start a timer, add a work block, and watch project budgets stay honest. No signup is needed for this public demo.</p>
       </section>
@@ -61,7 +63,7 @@ function TimerPage() {
         <div>
           <label class="label" for="project">Project</label>
           <select id="project" value={() => selectedProject()} onChange={(event) => selectedProject(event.target.value)}>
-            {() => workspace().projects.map((project) => <option value={project.id}>{project.name}</option>)}
+            <For each={() => workspace().projects} key={(project) => project.id}>{(project) => <option value={project().id}>{project().name}</option>}</For>
           </select>
         </div>
         <div>
@@ -75,10 +77,11 @@ function TimerPage() {
         <div class="timer-actions">
           {() => runningEntry()
             ? <button class="button primary" onClick={stopTimer}>Stop timer</button>
-            : <button class="button primary" onClick={startTimer}>Start timer</button>}
-          <button class="button" onClick={addManualEntry}>Add block</button>
+            : <button class="button primary" disabled={() => entryValidation().status === 'loading'} onClick={startTimer}>{() => entryValidation().status === 'loading' ? 'Checking entry…' : 'Start timer'}</button>}
+          <button class="button" disabled={() => entryValidation().status === 'loading'} onClick={addManualEntry}>Add block</button>
         </div>
-        <p class={() => entryValidation().status === 'error' ? 'validation error' : 'validation'}>
+        {() => runningEntry() ? <div class="running-block" role="status"><strong>Timer running · {Math.floor(Math.max(0, now() - (workspace().running?.startedAt || now())) / 60000)}m elapsed</strong><span>{runningEntry()?.note} · {workspace().projects.find((project) => project.id === runningEntry()?.projectId)?.name}</span></div> : null}
+        <p role="status" class={() => entryValidation().status === 'error' ? 'validation error' : 'validation'}>
           {() => entryValidation().status === 'loading'
             ? 'Checking this entry…'
             : entryValidation().status === 'error'
