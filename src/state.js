@@ -40,14 +40,19 @@ export const selectedProject = signal(workspace().projects[0]?.id || '');
 export const entryNote = signal('Deep work block');
 export const serverReport = signal({ status: 'idle', data: null, error: null });
 export const entryValidation = signal({ status: 'idle', error: null });
+export const persistenceStatus = signal('Saved only in this browser');
+let workspaceGeneration = 0;
+let entryRequest = 0;
+let reportRequest = 0;
 
 const interval = setInterval(() => now(Date.now()), 15000);
 
 const disposePersist = effect(() => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(workspace()));
+    persistenceStatus('Saved only in this browser');
   } catch {
-    // Demo persistence is best-effort and intentionally browser-local.
+    persistenceStatus('Session only · changes are not saved in this browser');
   }
 });
 
@@ -81,6 +86,9 @@ export const runningEntry = computed(() => {
 export const todaysEntries = computed(() => workspace().entries.filter((entry) => entry.day === isoToday()));
 
 async function validateDraftEntry(entry) {
+  const generation = workspaceGeneration;
+  const request = ++entryRequest;
+  const ownsResponse = () => generation === workspaceGeneration && request === entryRequest;
   entryValidation({ status: 'loading', error: null });
   try {
     const response = await fetch('/api/entry', {
@@ -89,6 +97,7 @@ async function validateDraftEntry(entry) {
       body: JSON.stringify({ projects: workspace().projects, entry })
     });
     const data = await response.json();
+    if (!ownsResponse()) return null;
     if (!response.ok || !data.ok) {
       entryValidation({ status: 'error', error: data.errors?.join(' ') || data.error || 'Entry validation failed.' });
       return null;
@@ -96,12 +105,15 @@ async function validateDraftEntry(entry) {
     entryValidation({ status: 'ready', error: null });
     return data.entry;
   } catch (error) {
+    if (!ownsResponse()) return null;
     entryValidation({ status: 'error', error: error.message });
     return null;
   }
 }
 
 export async function startTimer() {
+  if (entryValidation().status === 'loading' || runningEntry()) return;
+  const generation = workspaceGeneration;
   const project = currentProject();
   if (!project) return;
   const draft = {
@@ -112,7 +124,7 @@ export async function startTimer() {
     day: isoToday()
   };
   const entry = await validateDraftEntry(draft);
-  if (!entry) return;
+  if (!entry || generation !== workspaceGeneration) return;
   workspace((state) => ({
     ...state,
     running: { entryId: entry.id, startedAt: Date.now() },
@@ -133,6 +145,8 @@ export function stopTimer() {
 }
 
 export async function addManualEntry() {
+  if (entryValidation().status === 'loading') return;
+  const generation = workspaceGeneration;
   const project = currentProject();
   const minutes = Math.max(1, Math.min(1440, Number(draftMinutes()) || 0));
   if (!project) return;
@@ -143,7 +157,7 @@ export async function addManualEntry() {
     minutes,
     day: isoToday()
   });
-  if (!entry) return;
+  if (!entry || generation !== workspaceGeneration) return;
   workspace((state) => ({
     ...state,
     entries: [entry, ...state.entries]
@@ -158,12 +172,18 @@ export function updateEntry(id, patch) {
 }
 
 export function resetDemo() {
+  workspaceGeneration++;
+  entryRequest++;
+  reportRequest++;
   workspace(cloneSeed());
   serverReport({ status: 'idle', data: null, error: null });
   entryValidation({ status: 'idle', error: null });
 }
 
 export async function requestServerReport() {
+  const generation = workspaceGeneration;
+  const request = ++reportRequest;
+  const ownsResponse = () => generation === workspaceGeneration && request === reportRequest;
   serverReport({ status: 'loading', data: null, error: null });
   try {
     const response = await fetch('/api/report', {
@@ -172,12 +192,14 @@ export async function requestServerReport() {
       body: JSON.stringify(workspace())
     });
     const data = await response.json();
+    if (!ownsResponse()) return;
     if (!response.ok || !data.ok) {
       serverReport({ status: 'error', data, error: data.error || data.errors?.join(', ') || 'Report failed' });
       return;
     }
     serverReport({ status: 'ready', data, error: null });
   } catch (error) {
+    if (!ownsResponse()) return;
     serverReport({ status: 'error', data: null, error: error.message });
   }
 }

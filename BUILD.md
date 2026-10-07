@@ -1,5 +1,28 @@
 # Build notes for agents
 
+## One pending entry and honest running state
+
+Reset is also an asynchronous ownership boundary. `workspaceGeneration` changes before resetting signals, and request counters distinguish the latest entry/report request. After every asynchronous response or failure, a request may update state only if it still owns that generation and counter. A newer report wins even when an older response arrives last.
+
+```js
+const ownsResponse = () => generation === workspaceGeneration && request === reportRequest;
+```
+
+Controlled browser fetches prove pending timer/manual writes cannot repopulate a reset workspace, stale failures cannot clear a new pending guard, and stale report success/validation/network outcomes cannot overwrite idle or a newer snapshot.
+
+Timer creation rejects another start while validation is pending or a timer is already running. Manual creation also respects the pending boundary. Buttons expose checking state, the running panel names the note/project and elapsed minutes, and failed persistence is explicitly session-only. Keyed project options preserve the chosen project when entry changes refresh the workspace.
+
+The relevant source pattern is:
+
+```js
+if (entryValidation().status === 'loading' || runningEntry()) return;
+```
+
+The browser regression delays entry validation, attempts a duplicate start, requires one request/one row, preserves the chosen project, and checks denied storage. Existing continuous note/minutes focus checks remain in the same suite.
+
+Keep the product anonymous and local/synthetic. These workflow improvements do not add authentication, collaboration, payments, ingestion, or durable server storage.
+
+
 Tempo is a hybrid time-tracking demo. The browser owns an anonymous local workspace; bounded Vura Function-compatible endpoints validate entry drafts and generate reports. It is not a production multi-user SaaS backend until you add auth and durable tenant storage.
 
 ## Smooth path
