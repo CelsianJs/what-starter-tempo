@@ -20,3 +20,4 @@ jobs:
       - run: npm run build
       - run: npm run smoke --if-present
       - run: npm run test:browser --if-present
+      - run: npm run test:style

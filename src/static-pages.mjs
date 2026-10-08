@@ -2,6 +2,7 @@ import { h } from 'what-framework';
 
 export function BuildPage() {
   return h('main', { class: 'build' },
+    h('nav', { 'aria-label': 'Starter navigation' }, h('a', { href: '/' }, 'Tempo'), h('a', { href: '/projects' }, 'Projects'), h('a', { href: '/report' }, 'Report')),
     h('p', { class: 'eyebrow' }, 'Agent reference'),
     h('h1', null, 'How Tempo is built'),
     h('section', null,
@@ -61,11 +62,15 @@ export function NotFoundPage() {
 }
 
 export const staticCss = `
-  body{margin:0;background:#f6ead5;color:#221711;font-family:Georgia,'Times New Roman',serif}
-  .build{width:min(820px,calc(100% - 32px));margin:0 auto;padding:72px 0;line-height:1.65}
-  .eyebrow{color:#9b3512;text-transform:uppercase;letter-spacing:.14em;font:800 12px ui-sans-serif,system-ui}
-  h1{font-size:clamp(44px,9vw,92px);line-height:.9;letter-spacing:-.06em;margin:0 0 18px}
-  h2{font-size:28px;margin-top:36px}
-  pre{white-space:pre-wrap;background:#24160f;color:#ffe6c5;border-radius:18px;padding:16px;overflow:auto}
-  a{color:#9b3512} li{margin:10px 0}
+  *{box-sizing:border-box}
+  body{margin:0;background:#f7f8fa;color:#242a33;font:16px/1.6 'Avenir Next','Segoe UI Variable','Segoe UI',sans-serif}
+  .build{width:min(840px,calc(100% - 32px));margin:0 auto;padding:32px 0}
+  nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+  nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border:1px solid #d8dce1;border-radius:8px;background:white;font-size:14px;text-decoration:none}
+  .eyebrow{color:#9b3512;font-size:14px;font-weight:600}
+  h1{font-size:32px;line-height:1.2;letter-spacing:-.02em;margin:0 0 16px;font-weight:600}
+  h2{font-size:24px;line-height:1.3;margin-top:32px;font-weight:600}
+  pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#242a33;color:#fff;border-radius:8px;padding:16px;overflow:auto;font-size:14px;line-height:1.6}
+  a{color:#9b3512} a:focus-visible{outline:2px solid #9b3512;outline-offset:3px} li{margin:8px 0}
+  @media(max-width:600px){h1{font-size:28px}.build{padding:24px 0}}
 `;

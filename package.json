@@ -9,6 +9,7 @@
     "build": "vite build && node scripts/build-vura.mjs",
     "preview": "node scripts/preview-server.mjs",
     "test": "vitest run",
+    "test:style": "npm run build && node scripts/run-style-checks.mjs",
     "test:browser": "npm run build && node test/browser/focus.mjs",
     "smoke": "npm run build && node scripts/smoke.mjs",
     "deploy": "npm run build && vura-platform deploy",

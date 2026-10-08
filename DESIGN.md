@@ -2,12 +2,12 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-07
+- Last refreshed: 2026-10-08
 - Primary product surfaces: timer dashboard with serverless entry validation, compact product nav, project budget view, serverless report view, static `/build` explainer.
 - Evidence reviewed: What Framework starter conventions, Vura build-output shape, and the public starter requirements.
 
 ## Brand
-- Personality: warm editorial operations tool; a calm invoice-room notebook with crisp SaaS controls.
+- Personality: calm, task-first time workspace with a warm orange accent.
 - Trust signals: explicit anonymous local workspace, visible budget math, server report JSON, reset control.
 - Avoid: fake login, fake team collaboration, claims of database persistence, generic purple gradients.
 
@@ -27,15 +27,15 @@
 - Content hierarchy: product first, then implementation proof.
 
 ## Design principles
-- Editorial warmth: large serif headlines and paper texture make the app memorable.
+- Task-first hierarchy: bounded sans-serif headings keep time-entry controls prominent.
 - Truthful demo boundaries: every screen labels storage/runtime constraints honestly.
 - Tradeoffs: manual route signal keeps the app portable and easy to read instead of hiding routing behind a large abstraction.
 
 ## Visual language
-- Color: cream paper, dark ink, burnt orange action color.
-- Typography: Georgia serif for brand/editorial tone, system sans for controls.
-- Spacing/layout rhythm: wide calm panels, tighter persistent header, rounded capsules, high-density entry rows only where useful.
-- Shape/radius/elevation: generous rounded panels with soft warm shadows.
+- Color: quiet neutral canvas, white surfaces, dark ink and burnt orange accents.
+- Typography: Avenir Next, Segoe UI Variable, Segoe UI, sans-serif throughout; no remote fonts.
+- Spacing/layout rhythm: 8px spacing rhythm, compact persistent navigation, aligned editable rows and44px controls.
+- Shape/radius/elevation: quiet borders, 12px main surfaces, 8px controls and no decorative shadows.
 - Motion: tiny hover lift only; reduced motion disables transitions.
 - Imagery/iconography: no stock imagery; typographic logo mark.
 
@@ -48,7 +48,7 @@
 ## Accessibility
 - Target standard: WCAG AA practical baseline.
 - Keyboard/focus behavior: native inputs/selects/buttons, visible focus rings.
-- Contrast/readability: dark ink on cream and white text on orange.
+- Contrast/readability: dark ink on white; white text on dark burnt-orange primary actions.
 - Screen-reader semantics: labeled inputs, main landmark, aria labels for summaries.
 - Reduced motion and sensory considerations: `prefers-reduced-motion` removes animations.
 
@@ -91,5 +91,10 @@ Validation contract: The browser regression delays entry validation, attempts a 
 
 ## Visual QA audit
 - External reference: none supplied; design was evaluated against this document rather than a pixel target.
-- Current judgment: warm editorial SaaS direction is intentional, header/nav now uses tighter vertical spacing, mobile controls remain native/keyboard-accessible, current-day seed rows populate the editable list, keyed row rendering preserves focus while note/minutes edits recalculate totals, project budget cards show healthy/watch/over states with an 80% tick, and reduced-motion is respected.
+- Current judgment: compact sans-serif operational direction is intentional, header/nav now uses tighter vertical spacing, mobile controls remain native/keyboard-accessible, current-day seed rows populate the editable list, keyed row rendering preserves focus while note/minutes edits recalculate totals, project budget cards show healthy/watch/over states with an 80% tick, and reduced-motion is respected.
 - Follow-up after deployment: capture desktop/mobile screenshots from the live Vura URL and compare against the product goals above before linking from the marketing gallery.
+
+
+## Modern interface consistency
+
+The primary workspace, detail views and build guide share a bounded sans-serif hierarchy, natural-case 14px chrome, 44px targets and quiet surfaces. Do not reintroduce poster headings, decorative background grids, heavy shadows or pill-shaped navigation. Brand accents and functional visualizations remain distinct; operational information takes precedence over decoration.
