@@ -23,7 +23,7 @@ try {
   await page.getByRole('button', { name: 'Stop timer' }).click();
   await page.getByRole('button', { name: 'Report' }).click();
   await page.getByRole('button', { name: 'Generate weekly report' }).click();
-  await page.getByText('Billable value').waitFor();
+  await page.getByText('Billable value', { exact: true }).waitFor();
   await page.goto(`http://127.0.0.1:${port}/build`);
   await page.getByRole('heading', { name: 'How Tempo is built' }).waitFor();
   if (errors.length) throw new Error(`Console problems:\n${errors.join('\n')}`);
